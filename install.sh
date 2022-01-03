@@ -18,3 +18,17 @@ brew install karabiner-elements
 brew install 1clipboard
 brew install slack
 brew install keka
+brew install visual-studio-code
+
+#mac stuff
+defaults write com.apple.LaunchServices LSQuarantine -bool false
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWrite -bool true
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write com.apple.finder AppleShowAllFiles YES
+for app in "Address Book" "Calendar" "Contacts" "Dock" "Finder" "Mail" "Safari" "SystemUIServer" "iCal"; do
+  killall "${app}" &> /dev/null
+done
+defaults delete com.apple.dock persistent-apps; killall Dock

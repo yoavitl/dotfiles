@@ -1,97 +1,63 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
-# Path to your oh-my-zsh installation.
-export ZSH="/Users/yovi/.oh-my-zsh"
 
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="robbyrussell"
 
-plugins=(
-  git
-)
+export ZSH="$HOME/.oh-my-zsh"
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="/opt/homebrew/Cellar/pyenv-virtualenv/1.1.5/shims:/opt/homebrew/bin:$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH"
+
+ZSH_THEME="powerlevel10k/powerlevel10k"
+plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
-# export MANPATH="/usr/local/man:$MANPATH"
 
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/yovi/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/yovi/google-cloud-sdk/path.zsh.inc'; fi
 
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/yovi/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/yovi/google-cloud-sdk/completion.zsh.inc'; fi
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-alias git=hub
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-alias imgcat=/usr/local/bin/imgcat
-
-alias tf=terraform
-
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-sshu () { ssh -t -i /Users/master/.ssh/randomkey.pem -o "StrictHostKeyChecking no" ubuntu@"$@" "sudo su -";}
-function aprint() { awk "{print \$${1:-1}}"; }
-
-#ARM is AZURE
-
-function update_all() {
-     for i in folder/*/; do
-        echo '------- entering '$i' -------'
-        cd ~/$i
-         git fetch
-        git pull
-        cd ..
-    done
+function mkd() {
+	mkdir -p "$@" && cd "$_";
 }
-export PATH="/usr/local/opt/go@1.16/bin:$PATH"
-GOPATH=$(go env GOPATH)
-export GOROOT="$(brew --prefix golang)/libexec"
+
+function fs() {
+	if du -b /dev/null > /dev/null 2>&1; then
+		local arg=-sbh;
+	else
+		local arg=-sh;
+	fi
+	if [[ -n "$@" ]]; then
+		du $arg -- "$@";
+	else
+		du $arg .[^.]* ./*;
+	fi;
+}
+
+function server() {
+	localadd=`ipconfig getifaddr en0`
+	local port="${1:-8000}";
+	python -m http.server
+	open "http://${localadd}:${port}/" &
+}
+
+function o() {
+	if [ $# -eq 0 ]; then
+		open .;
+	else
+		open "$@";
+	fi;
+}
+sshu () { ssh -t -i /Users/???/.ssh/id_rsa -o "StrictHostKeyChecking no" yoav@"$@" "sudo su -";}
+
+function aprint() { awk "{print \$${1:-1}}"; }
+alias tf=terraform

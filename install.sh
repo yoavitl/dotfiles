@@ -14,8 +14,6 @@ brew install firefox
 brew install spotify
 brew install vlc
 brew install iterm2
-brew install karabiner-elements
-brew install 1clipboard
 brew install slack
 brew install keka
 brew install visual-studio-code
